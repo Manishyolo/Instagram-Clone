@@ -14,7 +14,7 @@ const imageKit = new ImageKit({
 
 async function CreatePost(req, res) {
   const { caption } = req.body;
-  let userId = null;
+  let userId = req.user.id;
   const Extension = req.file.originalname.split(".")[1];
   const videoFormats = [
     "mp4",
@@ -30,16 +30,6 @@ async function CreatePost(req, res) {
     "m4v",
     "ogg",
   ];
-
-  try {
-    const decodedToken = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
-
-    userId = decodedToken.id;
-  } catch (error) {
-    return res.status(401).json({
-      message: "Unauthroized access",
-    });
-  }
 
   if (videoFormats.includes(Extension)) {
     const file = await imageKit.files.upload({
@@ -78,6 +68,56 @@ async function CreatePost(req, res) {
   });
 }
 
+async function Getpost(req, res) {
+  let userId = req.user.id;
+  let post = null;
+
+  try {
+    post = await PostModel.find({ userId });
+  } catch (err) {
+    console.log(err);
+    return res.status(404).json({
+      message: "Posts not found",
+    });
+  }
+
+  res.status(200).json({
+    message: "Posts fetched Succesfully",
+    post: post,
+  });
+}
+
+async function getPostDetails(req, res) {
+  const videoId = req.params.postId;
+
+  let userId = req.user.id;
+  let post = null;
+
+  try {
+    post = await PostModel.findById(videoId);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({
+      message: "Post not found",
+    });
+  }
+
+  const isUserValid = post.userId.toString() === userId;
+
+  if (!isUserValid) {
+    return res.status(403).json({
+      message: "Forbidden content",
+    });
+  }
+
+  res.status(200).json({
+    message: "Post found",
+    post: post,
+  });
+}
+
 module.exports = {
   CreatePost,
+  Getpost,
+  getPostDetails,
 };
