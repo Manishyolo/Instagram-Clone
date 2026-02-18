@@ -10,14 +10,7 @@ const LikeSchema = new mongoose.Schema({
     likedBy:{
         type:String
     },
-    status:{
-        type:String,
-        default:"pending",
-        enum:{
-            values:["pending","accepted","rejected" ],
-                message:"status can only be pending, accepted or rejected"
-        }
-    }
+  
 },{
     timestamps:true
 })

@@ -13,7 +13,7 @@ async function followController(req,res){
        const IsUserExist = await UserModel.findOne({
               username:FollowingUsername
        });
-       
+
        if(!IsUserExist){
               return res.status(404).json({
                      message:"This User Does Not Exist"
@@ -34,7 +34,8 @@ async function followController(req,res){
        
        const follow = await FollowModel.create({
         follower:FollowerUsername,
-        following:FollowingUsername
+        following:FollowingUsername,
+     
        })
 
        return res.status(200).json({message:"Followed Succesfully"})
@@ -54,6 +55,41 @@ async function unfollowController(req,res){
        })
 
        return res.status(200).json({message:"Unfollowed Succesfully"})
+}
+async function accepteFollowRequest(req,res){
+       const userId = req.user.id;
+       const FollowRequestId = req.params.followrequestId;
+       const status = req.params.status;
+       let isFollowRequestExist = null;        
+
+       try {
+               isFollowRequestExist = await FollowModel.findOne({
+              following:userId,
+              status:"pending"
+       })
+              
+       } catch (error) {
+          res.status(404).json({
+              message:"Follow request not exist"
+          })
+       }
+      
+       if(userId !== isFollowRequestExist.following){
+              return res.status(403).json({
+                     message:"Not authorized"
+              })
+       }
+
+       if(status === "accepted"){
+              isFollowRequestExist.status = status;
+              await isFollowRequestExist.save();
+       }
+        
+        res.status(200).json({
+      message: `Follow request ${status}`
+    });
+       
+
 }
 
 
