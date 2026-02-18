@@ -12,4 +12,7 @@ PostRouter.get("/getpost",AuthMiddleware,PostController.Getpost);
 
 PostRouter.get("/:postId",AuthMiddleware,PostController.getPostDetails)
 
+
+PostRouter.post("/like/:postId",AuthMiddleware,PostController.LikePost)
+
 module.exports = PostRouter;

@@ -6,8 +6,8 @@ const UserRouter = express.Router();
 
 
 
-UserRouter.post("/follow/:followingId",AuthMiddleware,UserController.followController)
-UserRouter.post("/unfollow/:unfollowingId",AuthMiddleware,UserController.unfollowController)
+UserRouter.post("/follow/:username",AuthMiddleware,UserController.followController)
+UserRouter.post("/unfollow/:username",AuthMiddleware,UserController.unfollowController)
 
 
 

@@ -26,7 +26,7 @@ const RegisterController = async (req, res) => {
     password: hashedPassword,
   });
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: user._id,username:user.username }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
 
@@ -63,7 +63,7 @@ const LoginController = async (req, res) => {
       message: "Invalid Password",
     });
   }
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: user._id,username:user.username }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
 

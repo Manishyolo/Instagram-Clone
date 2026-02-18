@@ -1,5 +1,6 @@
 const PostModel = require("../models/PostModel");
 const videoModel = require("../models/VideoPostModel");
+const LikeModel = require("../models/LikeModel");
 const ImageKit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
 const jwt = require("jsonwebtoken");
@@ -116,8 +117,42 @@ async function getPostDetails(req, res) {
   });
 }
 
+async function LikePost(req, res) {
+  const postId = req.params.postId;
+  const userId = req.user.username;
+
+  try {
+    const isPostExist = await PostModel.findOne({ _id: postId });
+  } catch (err) {
+    return res.status(404).json({
+      message: "Post not found",
+    });
+  }
+
+  const isAlreadyLiked = await LikeModel.findOne({
+    postId: postId,
+    likedBy: userId,
+  });
+
+  if (isAlreadyLiked) {
+    return res.status(409).json({
+      message: "Post already Liked",
+    });
+  }
+
+  const likePost = await LikeModel.create({
+    postId: postId,
+    likedBy: userId,
+  });
+
+  res.status(200).json({
+    message: "Liked successfully",
+  });
+}
+
 module.exports = {
   CreatePost,
   Getpost,
   getPostDetails,
+  LikePost,
 };
