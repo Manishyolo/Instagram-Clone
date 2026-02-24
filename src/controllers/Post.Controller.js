@@ -149,10 +149,36 @@ async function LikePost(req, res) {
     message: "Liked successfully",
   });
 }
+async function Feed(req,res){
+     let allPosts = null;
+
+
+   try{
+ const posts = await PostModel.find();
+  const videoposts = await videoModel.find();
+
+   allPosts = [...posts,...videoposts];
+
+   }catch(err){
+
+    console.log("post not found")
+   }
+ 
+  
+
+  
+ console.log("hello")
+  
+  res.status(200).json({
+    allPosts:allPosts
+  })
+
+}
 
 module.exports = {
   CreatePost,
   Getpost,
   getPostDetails,
   LikePost,
+  Feed
 };

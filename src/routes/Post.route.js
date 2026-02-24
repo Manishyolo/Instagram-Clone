@@ -10,9 +10,13 @@ PostRouter.post("/create",AuthMiddleware,upload.single("image"),PostController.C
 
 PostRouter.get("/getpost",AuthMiddleware,PostController.Getpost);
 
+PostRouter.get("/getfeed",AuthMiddleware,PostController.Feed);
+
 PostRouter.get("/:postId",AuthMiddleware,PostController.getPostDetails)
 
 
 PostRouter.post("/like/:postId",AuthMiddleware,PostController.LikePost)
+
+
 
 module.exports = PostRouter;
